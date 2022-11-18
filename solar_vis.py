@@ -2,6 +2,7 @@
 # license: GPLv3
 
 import pygame as pg
+import pygame.draw
 
 """Модуль визуализации.
 Нигде, кроме этого модуля, не используются экранные координаты объектов.
@@ -72,7 +73,6 @@ class Drawer:
         self.screen.fill((0, 0, 0))
         for figure in figures:
             figure.draw(self.screen)
-
         ui.blit()
         ui.update()
         pg.display.update()
@@ -83,4 +83,4 @@ class DrawableObject:
         self.obj = obj
 
     def draw(self, surface):
-        self.obj.draw(surface)  # не уверен что заработает
+        pygame.draw.circle(surface, self.obj.color, (self.obj.x, self.obj.y), self.obj.R)
