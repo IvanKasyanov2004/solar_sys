@@ -83,4 +83,5 @@ class DrawableObject:
         self.obj = obj
 
     def draw(self, surface):
-        pygame.draw.circle(surface, self.obj.color, (self.obj.x, self.obj.y), self.obj.R)
+        pygame.draw.circle(surface, self.obj.color, (self.obj.x * scale_factor * 50 + 400, self.obj.y * scale_factor * 1e-30 + 400), self.obj.R)
+

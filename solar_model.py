@@ -67,6 +67,7 @@ def move_space_object(body, space_objects, scale_factor, dt):
     body.y += body.Vy * dt
 
 
+
 def recalculate_space_objects_positions(space_objects, scale_factor, dt):
     """Пересчитывает координаты объектов.
 
