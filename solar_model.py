@@ -31,7 +31,6 @@ def calculate_force(body, space_objects):
         body.Fx += N * X
         body.Fy += N * Y
         # Взаимодействие объектов
-        print(body.R, "Fx:", body.Fx, "Fy", body.Fy)
 
 def move_space_object(body, dt):
     """Перемещает тело в соответствии с действующей на него силой. В случае столкновения скорости тел изменяются

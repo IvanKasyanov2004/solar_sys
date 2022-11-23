@@ -106,8 +106,9 @@ def write_space_objects_data_to_file(output_filename, space_objects):
     """
     with open(output_filename, 'w') as out_file:
         for obj in space_objects:
-            print(out_file, "%s %d %s %f" % ('1', 2, '3', 4.5))
-            # FIXME!
+            if obj.obj.alive == 0:
+                continue
+            out_file.write(str(obj.obj.type) + " " + str(obj.obj.R) + " " + str(obj.obj.color) + " " + str(obj.obj.m) + " " + str(obj.obj.x) + " " + str(obj.obj.y) + " " + str(obj.obj.Vx) + " " + str(obj.obj.Vy)+ '\n')
 
 
 if __name__ == "__main__":

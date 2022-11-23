@@ -73,7 +73,7 @@ def open_file():
     global scale_factor
 
     model_time = 0.0
-    in_filename = "double_star.txt"
+    in_filename = "solar_system.txt"
     space_objects = read_space_objects_data_from_file(in_filename)
     max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects])
     scale_factor = calculate_scale_factor(max_distance)
@@ -150,8 +150,8 @@ def main():
 
     pg.init()
     
-    width = 700
-    height = 600
+    width = 1400
+    height = 1000
     screen = pg.display.set_mode((width, height))
     last_time = time.perf_counter()
     drawer = Drawer(screen)
@@ -169,6 +169,8 @@ def main():
         last_time = cur_time
         drawer.update(space_objects, box)
         time.sleep(1.0 / 60)
+
+    write_space_objects_data_to_file("output.txt", space_objects)
 
     print('Modelling finished!')
 
