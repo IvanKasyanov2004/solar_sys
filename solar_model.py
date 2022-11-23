@@ -1,5 +1,6 @@
 # coding: utf-8
 # license: GPLv3
+import random
 
 gravitational_constant = 6.67408E-11
 """Гравитационная постоянная Ньютона G"""
@@ -17,6 +18,8 @@ def calculate_force(body, space_objects):
 
     body.Fx = body.Fy = 0
     for obj in space_objects:
+        if obj.alive == 0:
+            continue # мертвые тела не участвуют в движении.
         if body == obj:
             continue  # тело не действует гравитационной силой на само себя!
         X = obj.x - body.x
@@ -42,6 +45,19 @@ def move_space_object(body, space_objects, scale_factor, dt):
 
     **dt** - шаг по времени.
     """
+    ax = body.Fx / body.m
+    body.Vx += ax * dt
+    body.x += body.Vx * dt
+    ay = body.Fy / body.m
+    body.Vy += ay * dt
+    body.y += body.Vy * dt
+
+    print("Fx:", body.Fx, "Fy", body.Fy)
+    print("Vx:", body.Vx, "Vy", body.Vy)
+    print("x:", body.x, "y", body.y)
+
+
+def hittest_space_objects(body, space_objects, scale_factor):
     scale_factor = 4.5e-08
     for obj in space_objects:
         if body == obj:
@@ -50,18 +66,17 @@ def move_space_object(body, space_objects, scale_factor, dt):
         Y = obj.y - body.y
         r_obj = obj.R / scale_factor
         r_body = body.R / scale_factor
-        if float((X**2 + Y**2)) <= float((r_obj + r_body)**2):                          
+        if (obj.alive == 1) and (float((X**2 + Y**2)) <= float((r_obj + r_body)**2)):                          
             body.Vx = (body.m * body.Vx + obj.m * obj.Vx) / (body.m + obj.m)
             body.Vy = (body.m * body.Vy + obj.m * obj.Vy) / (body.m + obj.m)
-            obj.R = 0
-            obj.m = 0
+            body.Fx = body.Fy = 0
+            body.x = (body.m * body.x + obj.m * obj.x) / (body.m + obj.m)
+            body.y = (body.m * body.y + obj.m * obj.y) / (body.m + obj.m)
+            body.R = (2 * (body.m + obj.m) / (body.m / body.R ** 3 + obj.m / obj.R ** 3)) ** (1/3)
+            body.m = body.m + obj.m
+            body.color = (random.randint(100,255), random.randint(100,255), random.randint(100,255))
+            obj.alive = 0
             print("obama")
-    ax = body.Fx / body.m
-    body.Vx += ax * dt
-    body.x += body.Vx * dt
-    ay = body.Fy / body.m
-    body.Vy += ay * dt
-    body.y += body.Vy * dt
 
 
 def recalculate_space_objects_positions(space_objects, scale_factor, dt):
@@ -76,9 +91,14 @@ def recalculate_space_objects_positions(space_objects, scale_factor, dt):
     **dt** — шаг по времени.
     """
     for body in space_objects:
-        calculate_force(body, space_objects)
+         if body.alive == 1:
+            calculate_force(body, space_objects)        
     for body in space_objects:
-        move_space_object(body, space_objects, scale_factor, dt)
+        if body.alive == 1:
+            move_space_object(body, space_objects, scale_factor, dt)
+    for body in space_objects:
+        if body.alive == 1:
+            hittest_space_objects(body, space_objects, scale_factor)
 
 
 if __name__ == "__main__":

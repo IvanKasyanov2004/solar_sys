@@ -19,7 +19,7 @@ class Star:
         self.Fy = 0  # Сила по оси **y**
         self.R = 5  # Радиус звезды
         self.color = "red"  # Цвет звезды
-        self.hit = 0
+        self.alive = 1
 
 class Planet:
     """Тип данных, описывающий планету.
@@ -38,4 +38,4 @@ class Planet:
         self.Fy = 0  # Сила по оси **y**
         self.R = 5  # Радиус планеты
         self.color = "green"  # Цвет планеты
-        self.hit = 0
+        self.alive = 1
