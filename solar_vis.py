@@ -12,10 +12,10 @@ import pygame.draw
 header_font = "Arial-16"
 """Шрифт в заголовке"""
 
-window_width = 900
+window_width = 1000
 """Ширина окна"""
 
-window_height = 12
+window_height = 900
 """Высота окна"""
 
 scale_factor = 1
@@ -58,7 +58,7 @@ def scale_y(y):
 
     **y** — y-координата модели.
     """
-    return -int(y * scale_factor) + window_height / 2
+    return -int(y * scale_factor) + window_height // 2
 
 
 if __name__ == "__main__":
@@ -83,5 +83,6 @@ class DrawableObject:
         self.obj = obj
 
     def draw(self, surface):
-        pygame.draw.circle(surface, self.obj.color, (self.obj.x * scale_factor * 50 + 400, self.obj.y * scale_factor * 1e-30 + 400), self.obj.R)
-
+        x = int(scale_x(self.obj.x))
+        y = int(scale_y(self.obj.y))
+        pygame.draw.circle(surface, self.obj.color, (x, y), self.obj.R)

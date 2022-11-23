@@ -24,7 +24,7 @@ def calculate_force(body, space_objects):
         r = (X**2 + Y**2)**0.5
         # обработка аномалий при прохождении одного тела сквозь другое
         G = gravitational_constant  
-        N = (G * body.m * obj.m) / r ** 3
+        N = (G * body.m * obj.m) / (r ** 3)
         body.Fx = N * X
         body.Fy = N * Y
         # Взаимодействие объектов
@@ -42,6 +42,7 @@ def move_space_object(body, space_objects, scale_factor, dt):
 
     **dt** - шаг по времени.
     """
+    scale_factor = 4.5e-08
     for obj in space_objects:
         if body == obj:
             continue
@@ -49,23 +50,18 @@ def move_space_object(body, space_objects, scale_factor, dt):
         Y = obj.y - body.y
         r_obj = obj.R / scale_factor
         r_body = body.R / scale_factor
-        if (X**2 + Y**2) <= (r_obj + r_body)**2:
-            delta_Vx_body = (2 * obj.m / (obj.m + body.m)) * (((obj.Vx - body.Vx) * X + (obj.Vy - body.Vy) * Y) / (X**2 + Y**2)) * X
-            delta_Vy_body = (2 * obj.m / (obj.m + body.m)) * (((obj.Vx - body.Vx) * X + (obj.Vy - body.Vy) * Y) / (X**2 + Y**2)) * Y
-            delta_Vx_obj = (2 * body.m / (obj.m + body.m)) * (((body.Vx - obj.Vx) * X + (body.Vy - obj.Vy) * Y) / (X**2 + Y**2)) * X
-            delta_Vy_obj = (2 * body.m / (obj.m + body.m)) * (((body.Vx - obj.Vx) * X + (body.Vy - obj.Vy) * Y) / (X**2 + Y**2)) * Y
-            body.Vx += delta_Vx_body
-            body.Vy += delta_Vy_body
-            obj.Vx += delta_Vx_obj
-            obj.Vy += delta_Vy_obj
-
+        if float((X**2 + Y**2)) <= float((r_obj + r_body)**2):                          
+            body.Vx = (body.m * body.Vx + obj.m * obj.Vx) / (body.m + obj.m)
+            body.Vy = (body.m * body.Vy + obj.m * obj.Vy) / (body.m + obj.m)
+            obj.R = 0
+            obj.m = 0
+            print("obama")
     ax = body.Fx / body.m
     body.Vx += ax * dt
     body.x += body.Vx * dt
-    ay = body.Fy * body.m
+    ay = body.Fy / body.m
     body.Vy += ay * dt
     body.y += body.Vy * dt
-
 
 
 def recalculate_space_objects_positions(space_objects, scale_factor, dt):
