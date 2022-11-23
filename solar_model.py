@@ -28,11 +28,12 @@ def calculate_force(body, space_objects):
         # обработка аномалий при прохождении одного тела сквозь другое
         G = gravitational_constant  
         N = (G * body.m * obj.m) / (r ** 3)
-        body.Fx = N * X
-        body.Fy = N * Y
+        body.Fx += N * X
+        body.Fy += N * Y
         # Взаимодействие объектов
+        print(body.R, "Fx:", body.Fx, "Fy", body.Fy)
 
-def move_space_object(body, space_objects, scale_factor, dt):
+def move_space_object(body, dt):
     """Перемещает тело в соответствии с действующей на него силой. В случае столкновения скорости тел изменяются
 
     Параметры:
@@ -52,13 +53,8 @@ def move_space_object(body, space_objects, scale_factor, dt):
     body.Vy += ay * dt
     body.y += body.Vy * dt
 
-    print("Fx:", body.Fx, "Fy", body.Fy)
-    print("Vx:", body.Vx, "Vy", body.Vy)
-    print("x:", body.x, "y", body.y)
-
 
 def hittest_space_objects(body, space_objects, scale_factor):
-    scale_factor = 4.5e-08
     for obj in space_objects:
         if body == obj:
             continue
@@ -74,9 +70,8 @@ def hittest_space_objects(body, space_objects, scale_factor):
             body.y = (body.m * body.y + obj.m * obj.y) / (body.m + obj.m)
             body.R = (2 * (body.m + obj.m) / (body.m / body.R ** 3 + obj.m / obj.R ** 3)) ** (1/3)
             body.m = body.m + obj.m
-            body.color = (random.randint(100,255), random.randint(100,255), random.randint(100,255))
+            body.color = (random.randint(100, 255), random.randint(100, 255), random.randint(100, 255))
             obj.alive = 0
-            print("obama")
 
 
 def recalculate_space_objects_positions(space_objects, scale_factor, dt):
@@ -95,7 +90,7 @@ def recalculate_space_objects_positions(space_objects, scale_factor, dt):
             calculate_force(body, space_objects)        
     for body in space_objects:
         if body.alive == 1:
-            move_space_object(body, space_objects, scale_factor, dt)
+            move_space_object(body, dt)
     for body in space_objects:
         if body.alive == 1:
             hittest_space_objects(body, space_objects, scale_factor)

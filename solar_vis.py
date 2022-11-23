@@ -12,10 +12,10 @@ import pygame.draw
 header_font = "Arial-16"
 """Шрифт в заголовке"""
 
-window_width = 1000
+window_width = 700
 """Ширина окна"""
 
-window_height = 900
+window_height = 600
 """Высота окна"""
 
 scale_factor = 1
@@ -31,6 +31,7 @@ def calculate_scale_factor(max_distance):
     global scale_factor
     scale_factor = 0.4 * min(window_height, window_width) / max_distance
     print('Scale factor:', scale_factor)
+    return scale_factor
 
 
 def scale_x(x):
