@@ -12,10 +12,10 @@ import pygame.draw
 header_font = "Arial-16"
 """Шрифт в заголовке"""
 
-window_width = 1400
+window_width = 900
 """Ширина окна"""
 
-window_height = 1000
+window_height = 750
 """Высота окна"""
 
 scale_factor = 1

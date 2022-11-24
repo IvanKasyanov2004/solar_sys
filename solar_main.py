@@ -2,11 +2,10 @@
 # license: GPLv3
 
 import pygame as pg
-from solar_vis import *
-from solar_model import *
-from solar_input import *
-from solar_objects import *
-from solar_stats import *
+from solar_vis import calculate_scale_factor, Drawer
+from solar_model import recalculate_space_objects_positions
+from solar_input import read_space_objects_data_from_file, write_space_objects_data_to_file
+from solar_stats import calculate_speed, calculate_distance, show_graph
 import thorpy
 import time
 import numpy as np
@@ -29,11 +28,27 @@ time_scale = 100000.0
 space_objects = []
 """Список космических объектов."""
 
+scale_factor = 1
+"""Масштабирование экранных координат по отношению к физическим.
+
+Тип: float
+
+Мера: количество пикселей на один метр."""
+
 graph_time = np.array([])
+"""
+Массив значений времени для построения графиков
+"""
 
 graph_speed = np.array([])
+"""
+Массив значений скорости спутника в каждый момент времени
+"""
 
 graph_S = np.array([])
+"""
+Массив значений расстояния от планеты до спутника в каждый момент времени
+"""
 
 
 def execution(delta):
@@ -43,7 +58,6 @@ def execution(delta):
     При perform_execution == True функция запрашивает вызов самой себя по таймеру через от 1 мс до 100 мс.
     """
     global model_time
-
     global graph_time
     global graph_speed
     global graph_S
@@ -52,9 +66,6 @@ def execution(delta):
     graph_time = np.append(graph_time, model_time)
     graph_speed = np.append(graph_speed, calculate_speed([dr.obj for dr in space_objects]))
     graph_S = np.append(graph_S, calculate_distance([dr.obj for dr in space_objects]))
-
-
-    
 
 
 def start_execution():
@@ -66,6 +77,9 @@ def start_execution():
 
 
 def pause_execution():
+    """
+    Останавливает выполнение программы
+    """
     global perform_execution
     perform_execution = False
 
@@ -84,10 +98,7 @@ def open_file():
     Считанные объекты сохраняются в глобальный список space_objects
     """
     global space_objects
-
-
     global scale_factor
-
   
     in_filename = "one_satellite.txt"
     space_objects = read_space_objects_data_from_file(in_filename)
@@ -96,6 +107,9 @@ def open_file():
 
 
 def handle_events(events, menu):
+    """
+    Обрабатывает действия пользователя и вызывает реакцию интерфейса и всей программы на них
+    """
     global alive
     for event in events:
         menu.react(event)
@@ -103,17 +117,18 @@ def handle_events(events, menu):
             alive = False
 
 
-def slider_to_real(val):
-    return np.exp(5 + val)
-
-
 def slider_reaction(event):
+    """
+    Назначение действия для элемента интерфеса slider
+    """
     global time_scale
-    time_scale = slider_to_real(event.el.get_value())
+    time_scale = np.exp(5 + event.el.get_value())
 
 
 def init_ui(screen):
-
+    """
+    Отрисовка основного интерфейса программы и назначение действий для каждого элемента интерфейса
+    """
     slider = thorpy.SliderX(100, (-10, 10), "Simulation speed")
     slider.user_func = slider_reaction
     button_stop = thorpy.make_button("Quit", func=stop_execution)
@@ -132,7 +147,7 @@ def init_ui(screen):
         timer])
     reaction1 = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
                                 reac_func=slider_reaction,
-                                event_args={"id" : thorpy.constants.EVENT_SLIDE},
+                                event_args={"id": thorpy.constants.EVENT_SLIDE},
                                 params={},
                                 reac_name="slider reaction")
     box.add_reaction(reaction1)
@@ -151,8 +166,6 @@ def main():
     """Главная функция главного модуля.
     Создаёт объекты графического дизайна библиотеки tkinter: окно, холст, фрейм с кнопками, кнопки.
     """
-    
-
 
     global perform_execution
     global timer
@@ -161,8 +174,8 @@ def main():
 
     pg.init()
     
-    width = 1400
-    height = 1000
+    width = 900
+    height = 750
     screen = pg.display.set_mode((width, height))
     last_time = time.perf_counter()
     drawer = Drawer(screen)

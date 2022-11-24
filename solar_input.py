@@ -1,8 +1,9 @@
 # coding: utf-8
 # license: GPLv3
 
-from solar_objects import Star, Planet
+from solar_objects import SpaceObject
 from solar_vis import DrawableObject
+
 
 def read_space_objects_data_from_file(input_filename):
     """Cчитывает данные о космических объектах из файла, создаёт сами объекты
@@ -21,11 +22,11 @@ def read_space_objects_data_from_file(input_filename):
 
             object_type = line.split()[0].lower()
             if object_type == "star":
-                star = Star()
+                star = SpaceObject("star")
                 parse_star_parameters(line, star)
                 objects.append(star)
             elif object_type == "planet":
-                planet = Planet()
+                planet = SpaceObject("planet")
                 parse_planet_parameters(line, planet)
                 objects.append(planet)
             else:
@@ -62,6 +63,7 @@ def parse_star_parameters(line, star):
     star.Vx = float(star_parameters[6])
     star.Vy = float(star_parameters[7])
 
+
 def parse_planet_parameters(line, planet):
     """Считывает данные о планете из строки.
     Входная строка должна иметь слеюущий формат:
@@ -89,6 +91,7 @@ def parse_planet_parameters(line, planet):
     planet.Vx = float(planet_parameters[6])
     planet.Vy = float(planet_parameters[7])
 
+
 def write_space_objects_data_to_file(output_filename, space_objects):
     """Сохраняет данные о космических объектах в файл.
 
@@ -108,7 +111,9 @@ def write_space_objects_data_to_file(output_filename, space_objects):
         for obj in space_objects:
             if obj.obj.alive == 0:
                 continue
-            out_file.write(str(obj.obj.type) + " " + str(obj.obj.R) + " " + str(obj.obj.color) + " " + str(obj.obj.m) + " " + str(obj.obj.x) + " " + str(obj.obj.y) + " " + str(obj.obj.Vx) + " " + str(obj.obj.Vy)+ '\n')
+            out_file.write(str(obj.obj.type) + " " + str(obj.obj.R) + " " + str(obj.obj.color) + " " + str(obj.obj.m)
+                           + " " + str(obj.obj.x) + " " + str(obj.obj.y) + " " + str(obj.obj.Vx) + " "
+                           + str(obj.obj.Vy) + '\n')
 
 
 if __name__ == "__main__":

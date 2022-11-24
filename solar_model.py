@@ -32,6 +32,7 @@ def calculate_force(body, space_objects):
         body.Fy += N * Y
         # Взаимодействие объектов
 
+
 def move_space_object(body, dt):
     """Перемещает тело в соответствии с действующей на него силой. В случае столкновения скорости тел изменяются
 
@@ -53,15 +54,15 @@ def move_space_object(body, dt):
     body.y += body.Vy * dt
 
 
-def hittest_space_objects(body, space_objects, scale_factor):
+def hit_test_space_objects(body, space_objects, scale_factor):
     for obj in space_objects:
         if body == obj:
             continue
-        X = obj.x - body.x
-        Y = obj.y - body.y
+        x = obj.x - body.x
+        y = obj.y - body.y
         r_obj = obj.R / scale_factor
         r_body = body.R / scale_factor
-        if (obj.alive == 1) and (float((X**2 + Y**2)) <= float((r_obj + r_body)**2)):                          
+        if (obj.alive == 1) and (float((x**2 + y**2)) <= float((r_obj + r_body)**2)):
             body.Vx = (body.m * body.Vx + obj.m * obj.Vx) / (body.m + obj.m)
             body.Vy = (body.m * body.Vy + obj.m * obj.Vy) / (body.m + obj.m)
             body.Fx = body.Fy = 0
@@ -92,7 +93,7 @@ def recalculate_space_objects_positions(space_objects, scale_factor, dt):
             move_space_object(body, dt)
     for body in space_objects:
         if body.alive == 1:
-            hittest_space_objects(body, space_objects, scale_factor)
+            hit_test_space_objects(body, space_objects, scale_factor)
 
 
 if __name__ == "__main__":
