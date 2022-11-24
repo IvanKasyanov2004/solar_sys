@@ -6,13 +6,31 @@ import numpy as np
 import matplotlib
 from matplotlib import pyplot as plt
 
+def check_system(space_objects):
+    """Проверяет, можно ли построить график для данной системы (определяет количество тел и их тип).
+    
+    Параметры:
+    
+    **space_objects** - список объектов.
+    """
+    planet = 0
+    star = 0
+    for obj in space_objects:
+        if obj.type == "planet":
+            planet += 1
+        if obj.type == "star":
+            star += 1
+    if planet == 1 and star == 1:
+        return True
+    return False
+
 
 def calculate_speed(space_objects):
     """Вычисляет модуль скорости планеты.
 
     Параметры:
 
-    space_objects - список объектов.
+    **space_objects** - список объектов.
     """
     for obj in space_objects:
         if obj.type == "planet":
@@ -25,7 +43,7 @@ def calculate_distance(space_objects):
 
     Параметры:
 
-    space_objects - список объектов.
+    **space_objects** - список объектов.
     """
     for obj in space_objects:
         if obj.type == "star":
@@ -41,11 +59,11 @@ def show_graph(graph_time, graph_speed, graph_S):
 
     Параметры:
 
-    graph_time - массив со значениями физического времени от начала отсчёта.
+    **graph_time** - массив со значениями физического времени от начала отсчёта.
 
-    graph_speed - массив со значениями модуля скорсоти планеты.
+    **graph_speed** - массив со значениями модуля скорсоти планеты.
 
-    graph_S - массив со значениями расстояния между планетой и звездой.
+    **graph_S** - массив со значениями расстояния между планетой и звездой.
     """
     f = plt.figure(figsize=(14, 10))
     ax1 = f.add_subplot(221)

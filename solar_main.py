@@ -5,7 +5,7 @@ import pygame as pg
 from solar_vis import calculate_scale_factor, Drawer
 from solar_model import recalculate_space_objects_positions
 from solar_input import read_space_objects_data_from_file, write_space_objects_data_to_file
-from solar_stats import calculate_speed, calculate_distance, show_graph
+from solar_stats import check_system, calculate_speed, calculate_distance, show_graph
 import thorpy
 import time
 import numpy as np
@@ -63,9 +63,10 @@ def execution(delta):
     global graph_S
     recalculate_space_objects_positions([dr.obj for dr in space_objects], scale_factor, delta)
     model_time += delta
-    graph_time = np.append(graph_time, model_time)
-    graph_speed = np.append(graph_speed, calculate_speed([dr.obj for dr in space_objects]))
-    graph_S = np.append(graph_S, calculate_distance([dr.obj for dr in space_objects]))
+    if check_system([dr.obj for dr in space_objects]) == True:
+        graph_time = np.append(graph_time, model_time)
+        graph_speed = np.append(graph_speed, calculate_speed([dr.obj for dr in space_objects]))
+        graph_S = np.append(graph_S, calculate_distance([dr.obj for dr in space_objects]))
 
 
 def start_execution():
@@ -100,7 +101,7 @@ def open_file():
     global space_objects
     global scale_factor
   
-    in_filename = "one_satellite.txt"
+    in_filename = "solar_system.txt"
     space_objects = read_space_objects_data_from_file(in_filename)
     max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects])
     scale_factor = calculate_scale_factor(max_distance)
@@ -195,7 +196,8 @@ def main():
         time.sleep(1.0 / 60)
 
     write_space_objects_data_to_file("output.txt", space_objects)
-    show_graph(graph_time, graph_speed, graph_S)
+    if check_system([dr.obj for dr in space_objects]) == True:
+        show_graph(graph_time, graph_speed, graph_S)
 
     print('Modelling finished!')
 

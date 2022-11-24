@@ -80,10 +80,22 @@ class Drawer:
 
 
 class DrawableObject:
+    """
+    Класс, присвайвающий объектам функцию отрисовки.
+    """
+
     def __init__(self, obj):
         self.obj = obj
 
     def draw(self, surface):
+        """
+        Отрисовывает объекты на экране.
+
+        Параметры:
+
+        **surface** - pg.display.set_mode((width, height))
+        """
+
         if self.obj.alive == 1:
             x = int(scale_x(self.obj.x))
             y = int(scale_y(self.obj.y))
