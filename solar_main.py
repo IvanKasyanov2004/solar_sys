@@ -101,7 +101,7 @@ def open_file():
     global space_objects
     global scale_factor
   
-    in_filename = "solar_system.txt"
+    in_filename = "one_satellite.txt"
     space_objects = read_space_objects_data_from_file(in_filename)
     max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects])
     scale_factor = calculate_scale_factor(max_distance)
