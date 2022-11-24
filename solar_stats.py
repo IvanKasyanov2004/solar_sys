@@ -16,7 +16,7 @@ def calculate_speed(space_objects):
     """
     for obj in space_objects:
         if obj.type == "planet":
-            V = (obj.Vx  2 + obj.Vy  2) ** 0.5
+            V = (obj.Vx**2 + obj.Vy**2) ** 0.5
             return V
 
 
@@ -32,8 +32,7 @@ def calculate_distance(space_objects):
             X = obj.x
             Y = obj.y
         if obj.type == "planet":
-            S = ((obj.x - X)  2 + (obj.y - Y)
-            2) ** 0.5
+            S = ((obj.x - X)**2 + (obj.y - Y)**2) ** 0.5
             return S
 
 
@@ -79,6 +78,6 @@ def show_graph(graph_time, graph_speed, graph_S):
     plt.show()
 
 
-if name == "__main__":
+if __name__ == "__main__":
     print("This module is not for direct call!")
         
