@@ -6,6 +6,7 @@ from solar_vis import *
 from solar_model import *
 from solar_input import *
 from solar_objects import *
+from solar_stats import *
 import thorpy
 import time
 import numpy as np
@@ -21,12 +22,18 @@ model_time = 0
 """Физическое время от начала расчёта.
 Тип: float"""
 
-time_scale = 1000.0
+time_scale = 100000.0
 """Шаг по времени при моделировании.
 Тип: float"""
 
 space_objects = []
 """Список космических объектов."""
+
+graph_time = np.array([])
+
+graph_speed = np.array([])
+
+graph_S = np.array([])
 
 
 def execution(delta):
@@ -36,9 +43,18 @@ def execution(delta):
     При perform_execution == True функция запрашивает вызов самой себя по таймеру через от 1 мс до 100 мс.
     """
     global model_time
-    global displayed_time
+
+    global graph_time
+    global graph_speed
+    global graph_S
     recalculate_space_objects_positions([dr.obj for dr in space_objects], scale_factor, delta)
     model_time += delta
+    graph_time = np.append(graph_time, model_time)
+    graph_speed = np.append(graph_speed, calculate_speed([dr.obj for dr in space_objects]))
+    graph_S = np.append(graph_S, calculate_distance([dr.obj for dr in space_objects]))
+
+
+    
 
 
 def start_execution():
@@ -68,12 +84,12 @@ def open_file():
     Считанные объекты сохраняются в глобальный список space_objects
     """
     global space_objects
-    global browser
-    global model_time
+
+
     global scale_factor
 
-    model_time = 0.0
-    in_filename = "solar_system.txt"
+  
+    in_filename = "one_satellite.txt"
     space_objects = read_space_objects_data_from_file(in_filename)
     max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects])
     scale_factor = calculate_scale_factor(max_distance)
@@ -97,7 +113,7 @@ def slider_reaction(event):
 
 
 def init_ui(screen):
-    global browser
+
     slider = thorpy.SliderX(100, (-10, 10), "Simulation speed")
     slider.user_func = slider_reaction
     button_stop = thorpy.make_button("Quit", func=stop_execution)
@@ -136,17 +152,12 @@ def main():
     Создаёт объекты графического дизайна библиотеки tkinter: окно, холст, фрейм с кнопками, кнопки.
     """
     
-    global physical_time
-    global displayed_time
-    global time_step
-    global time_speed
-    global space
-    global start_button
+
+
     global perform_execution
     global timer
 
     print('Modelling started!')
-    physical_time = 0
 
     pg.init()
     
@@ -171,6 +182,7 @@ def main():
         time.sleep(1.0 / 60)
 
     write_space_objects_data_to_file("output.txt", space_objects)
+    show_graph(graph_time, graph_speed, graph_S)
 
     print('Modelling finished!')
 
